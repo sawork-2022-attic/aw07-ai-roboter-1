@@ -1,0 +1,181 @@
+openapi: 3.0.0
+info:
+  license:
+    name: MIT
+  title: Cart
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /items:
+    get:
+      description: get cart's items
+      operationId: showCartItems
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+          description: An array of items
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: cart items
+      x-accepts: application/json
+  /items/{productId}:
+    delete:
+      description: delete the item whose id is the product id
+      operationId: deleteItem
+      parameters:
+      - description: the id of product to be deleted
+        explode: false
+        in: path
+        name: productId
+        required: true
+        schema:
+          example: "123124"
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: respond for delete request
+      summary: delete item
+      x-accepts: application/json
+    post:
+      description: add new item
+      operationId: addItem
+      parameters:
+      - description: The ID of product.
+        explode: false
+        in: path
+        name: productId
+        required: true
+        schema:
+          example: "12131"
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemFiled'
+        description: The item
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: add successfully
+      summary: add item
+      x-contentType: application/json
+      x-accepts: application/json
+    put:
+      description: update item quantity
+      operationId: updateItem
+      parameters:
+      - description: The ID of product.
+        explode: false
+        in: path
+        name: productId
+        required: true
+        schema:
+          example: "12131"
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemFiled'
+        description: item that need to update
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: update successfully
+      x-contentType: application/json
+      x-accepts: application/json
+components:
+  schemas:
+    Product:
+      example:
+        image: image
+        price: 0.8008281904610115
+        name: name
+        id: id
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        image:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+    ItemFiled:
+      description: Editable fields of Item
+      example:
+        quantity: 0
+      properties:
+        quantity:
+          type: integer
+      type: object
+    Item:
+      example:
+        product:
+          image: image
+          price: 0.8008281904610115
+          name: name
+          id: id
+        quantity: 6
+      properties:
+        product:
+          $ref: '#/components/schemas/Product'
+        quantity:
+          type: integer
+    Cart:
+      items:
+        $ref: '#/components/schemas/Item'
+      type: array
+    Error:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    Message:
+      example:
+        success: true
+        message: message
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+      - message
+      - success
+      type: object
+
