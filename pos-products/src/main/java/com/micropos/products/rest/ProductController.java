@@ -1,7 +1,7 @@
 package com.micropos.products.rest;
 
-import com.micropos.products.api.ProductApi;
-import com.micropos.products.dto.ProductDto;
+import com.micropos.api.ProductApi;
+import com.micropos.dto.ProductDto;
 import com.micropos.products.mapper.ProductMapper;
 import com.micropos.products.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -36,13 +36,12 @@ public class ProductController implements ProductApi {
         }
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
-
     @Override
-    public ResponseEntity<ProductDto> showProductById(String productId) {
+    public ResponseEntity<ProductDto> showProductById(Long productId) {
         var product = this.productService.getProduct(productId);
-        if (product == null) {
+        if (product.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<ProductDto>(this.productMapper.toProductDto(product), HttpStatus.OK);
+        return  ResponseEntity.ok(this.productMapper.toProductDto(product.get()));
     }
 }

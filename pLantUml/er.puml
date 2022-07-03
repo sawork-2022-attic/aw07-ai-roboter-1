@@ -1,0 +1,24 @@
+@startuml
+class product {
+    Long id
+    String productName
+    String imageUrl
+}
+class cart {
+    Long id
+    Long UserId # 暂时没有用户系统
+}
+
+class Item {
+    Long cartId
+    Long productId
+    Int quantity
+}
+
+class Order {
+
+}
+"cart" "1" *-- "n" "product"
+Order "1" *-- "n" product
+
+@enduml
